@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFX Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #sfx-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        #sfx-list {
+            list-style: none;
+            padding: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        #sfx-list li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #e0e0e0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #sfx-list li:hover {
+            background: #d0d0d0;
+        }
+        #sfx-list li.active {
+            background: #4CAF50;
+            color: white;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="sfx-container">
+        <h1>SFX Controller</h1>
+        <ul id="sfx-list"></ul>
+    </div>
+
+    <script>
+        // Array of sound effects (replace with your own audio file paths)
+        const soundEffects = [
+            { name: "Thunder", src: "thunder.mp3" },
+            { name: "Door Creak", src: "door_creak.mp3" },
+            { name: "Applause", src: "applause.mp3" },
+            { name: "Wind", src: "wind.mp3" }
+        ];
+
+        let currentAudio = null;
+        let currentIndex = -1;
+
+        // Populate the SFX list
+        const sfxList = document.getElementById("sfx-list");
+        soundEffects.forEach((sfx, index) => {
+            const li = document.createElement("li");
+            li.textContent = sfx.name;
+            li.dataset.index = index;
+            li.addEventListener("click", () => selectSFX(index));
+            sfxList.appendChild(li);
+        });
+
+        // Select and highlight an SFX
+        function selectSFX(index) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            currentIndex = index;
+            updateActiveItem();
+            currentAudio = new Audio(soundEffects[index].src);
+        }
+
+        // Update the active item in the list
+        function updateActiveItem() {
+            const items = sfxList.getElementsByTagName("li");
+            for (let i = 0; i < items.length; i++) {
+                items[i].classList.remove("active");
+                if (i === currentIndex) {
+                    items[i].classList.add("active");
+                }
+            }
+        }
+
+        // Keyboard controls
+        document.addEventListener("keydown", (event) => {
+            if (event.code === "Space") {
+                event.preventDefault(); // Prevent scrolling
+                if (currentAudio) {
+                    if (currentAudio.paused) {
+                        currentAudio.play();
+                    } else {
+                        currentAudio.pause();
+                    }
+                } else if (soundEffects.length > 0) {
+                    selectSFX(0); // Auto-select first SFX if none selected
+                    currentAudio.play();
+                }
+            }
+            // Arrow keys to navigate list
+            if (event.code === "ArrowDown" && currentIndex < soundEffects.length - 1) {
+                selectSFX(currentIndex + 1);
+            }
+            if (event.code === "ArrowUp" && currentIndex > 0) {
+                selectSFX(currentIndex - 1);
+            }
+        });
+    </script>
+</body>
+</html>
