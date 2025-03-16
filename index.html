@@ -7,43 +7,47 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: black;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+            min-height: 100vh;
         }
         #sfx-container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center;
+            width: 100%;
+            max-width: 1000px; /* Optional: limits width on large screens */
+            padding: 0;
         }
         #sfx-list {
             list-style: none;
             padding: 0;
-            max-height: 400px;
-            overflow-y: auto;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
         }
         #sfx-list li {
-            padding: 10px;
-            margin: 5px 0;
-            background: #e0e0e0;
+            width: 50%;
+            padding: 20px;
+            background: #333;
+            color: white;
             cursor: pointer;
-            border-radius: 5px;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 18px;
+            border: 1px solid #555;
         }
         #sfx-list li:hover {
-            background: #d0d0d0;
+            background: #444;
         }
         #sfx-list li.active {
             background: #4CAF50;
-            color: white;
         }
         h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
+            color: white;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 28px;
         }
     </style>
 </head>
@@ -114,6 +118,13 @@
                 selectSFX(currentIndex + 1);
             }
             if (event.code === "ArrowUp" && currentIndex > 0) {
+                selectSFX(currentIndex - 1);
+            }
+            // Left/Right for two-column navigation
+            if (event.code === "ArrowRight" && currentIndex % 2 === 0 && currentIndex + 1 < soundEffects.length) {
+                selectSFX(currentIndex + 1);
+            }
+            if (event.code === "ArrowLeft" && currentIndex % 2 === 1) {
                 selectSFX(currentIndex - 1);
             }
         });
